@@ -16,7 +16,12 @@ std::string c_registry::QueryValue(const char* path, e_registry_type type)
 		LOG("[!] failed QueryValueExU call\n");
 		return "";
 	}
-
+	//TODO: implement something nicer & better than this.
+	if (type == e_registry_type::dword)
+	{
+		DWORD dwordValue = *reinterpret_cast<DWORD*>(buffer);
+		return std::to_string(dwordValue);
+	}
 	std::wstring wstr = std::wstring(reinterpret_cast<wchar_t*>(buffer));
 	return std::string(wstr.begin(), wstr.end());
 }

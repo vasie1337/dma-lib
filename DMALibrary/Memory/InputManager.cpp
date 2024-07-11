@@ -13,6 +13,13 @@ bool c_keys::InitKeyboard()
 	else
 		return false;
 
+	std::string ubr = registry.QueryValue("HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\UBR", e_registry_type::dword);
+	int Ubr = 0;
+	if (!ubr.empty())
+		Ubr = std::stoi(ubr);
+	else
+		return false;
+
 	this->win_logon_pid = mem.GetPidFromName("winlogon.exe");
 	if (Winver > 22000)
 	{
@@ -23,7 +30,10 @@ bool c_keys::InitKeyboard()
 			uintptr_t tmp = VMMDLL_ProcessGetModuleBaseU(mem.vHandle, pid, const_cast<LPSTR>("win32ksgd.sys"));
 			uintptr_t g_session_global_slots = tmp + 0x3110;
 			uintptr_t user_session_state = mem.Read<uintptr_t>(mem.Read<uintptr_t>(mem.Read<uintptr_t>(g_session_global_slots, pid), pid), pid);
-			gafAsyncKeyStateExport = user_session_state + 0x3690;
+			if (Winver >= 22631 && Ubr >= 3810)
+				gafAsyncKeyStateExport = user_session_state + 0x36A8;
+			else
+				gafAsyncKeyStateExport = user_session_state + 0x3690;
 			if (gafAsyncKeyStateExport > 0x7FFFFFFFFFFF)
 				break;
 		}
