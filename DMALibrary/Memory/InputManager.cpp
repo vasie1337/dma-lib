@@ -29,7 +29,13 @@ bool c_keys::InitKeyboard()
 			auto pid = pids[i];
 			uintptr_t tmp = VMMDLL_ProcessGetModuleBaseU(mem.vHandle, pid, const_cast<LPSTR>("win32ksgd.sys"));
 			uintptr_t g_session_global_slots = tmp + 0x3110;
-			uintptr_t user_session_state = mem.Read<uintptr_t>(mem.Read<uintptr_t>(mem.Read<uintptr_t>(g_session_global_slots, pid), pid), pid);
+			uintptr_t user_session_state = 0;
+			for (int i = 0; i < 4; i++)
+			{
+				user_session_state = mem.Read<uintptr_t>(mem.Read<uintptr_t>(mem.Read<uintptr_t>(g_session_global_slots, pid) + 8 * i, pid), pid);
+				if (user_session_state > 0x7FFFFFFFFFFF)
+					break;
+			}
 			if (Winver >= 22631 && Ubr >= 3810)
 				gafAsyncKeyStateExport = user_session_state + 0x36A8;
 			else
