@@ -301,8 +301,7 @@ public:
 	template <typename T>
 	void AddScatterReadRequest(VMMDLL_SCATTER_HANDLE handle, uint64_t address, T* buffer)
 	{
-		size_t size = sizeof(T);
-		AddScatterReadRequest(handle, address, reinterpret_cast<void*>(buffer), size);
+		AddScatterReadRequest(handle, address, reinterpret_cast<void*>(buffer), sizeof(T));
 	}
 		
 	void AddScatterWriteRequest(VMMDLL_SCATTER_HANDLE handle, uint64_t address, void* buffer, size_t size);
