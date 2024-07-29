@@ -297,7 +297,16 @@ public:
 	 * \param size the size of buffer
 	 */
 	void AddScatterReadRequest(VMMDLL_SCATTER_HANDLE handle, uint64_t address, void* buffer, size_t size);
+
+	template <typename T>
+	void AddScatterReadRequest(VMMDLL_SCATTER_HANDLE handle, uint64_t address, T* buffer)
+	{
+		size_t size = sizeof(T);
+		AddScatterReadRequest(handle, address, reinterpret_cast<void*>(buffer), size);
+	}
+		
 	void AddScatterWriteRequest(VMMDLL_SCATTER_HANDLE handle, uint64_t address, void* buffer, size_t size);
+		
 
 	/**
 	 * \brief Executes all prepared scatter requests, note if you created a scatter handle with a pid
