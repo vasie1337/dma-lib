@@ -276,6 +276,14 @@ public:
 		return result;
 	}
 
+	template <typename T>
+	T ReadChain(uint64_t base, const std::vector<uint64_t>& offsets)
+	{
+		T result = Read<T>(base + offsets.at(0));
+		for (int i = 1; i < offsets.size(); i++) result = Read<T>(result + offsets.at(i));
+		return result;
+	}
+
 	/**
 	 * \brief Create a scatter handle, this is used for scatter read/write requests
 	 * \return Scatter handle
