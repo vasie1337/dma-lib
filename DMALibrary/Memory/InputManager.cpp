@@ -12,14 +12,12 @@ bool c_keys::InitKeyboard()
 		Winver = std::stoi(win);
 	else
 		return false;
-
 	std::string ubr = registry.QueryValue("HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\UBR", e_registry_type::dword);
 	int Ubr = 0;
 	if (!ubr.empty())
 		Ubr = std::stoi(ubr);
 	else
 		return false;
-
 	this->win_logon_pid = mem.GetPidFromName("winlogon.exe");
 	if (Winver > 22000)
 	{
@@ -28,7 +26,15 @@ bool c_keys::InitKeyboard()
 		{
 			auto pid = pids[i];
 			uintptr_t tmp = VMMDLL_ProcessGetModuleBaseU(mem.vHandle, pid, const_cast<LPSTR>("win32ksgd.sys"));
-			uintptr_t g_session_global_slots = tmp + 0x3110;
+			uintptr_t g_session_global_slots;
+			if (!tmp) {
+				tmp = VMMDLL_ProcessGetModuleBaseU(mem.vHandle, pid, const_cast<LPSTR>("win32k.sys"));
+				g_session_global_slots = tmp + 0x82538;
+			}
+			else {
+				g_session_global_slots = tmp + 0x3110;
+			}
+
 			uintptr_t user_session_state = 0;
 			for (int i = 0; i < 4; i++)
 			{
@@ -36,12 +42,16 @@ bool c_keys::InitKeyboard()
 				if (user_session_state > 0x7FFFFFFFFFFF)
 					break;
 			}
-			if (Winver >= 22631 && Ubr >= 3810)
+			if (Winver >= 26100) {
+				gafAsyncKeyStateExport = user_session_state + 0x3820;
+			}
+			else if (Winver >= 22631 && Ubr >= 3810) {
 				gafAsyncKeyStateExport = user_session_state + 0x36A8;
-			else
+			}
+			else {
 				gafAsyncKeyStateExport = user_session_state + 0x3690;
-			if (gafAsyncKeyStateExport > 0x7FFFFFFFFFFF)
-				break;
+			}
+			if (gafAsyncKeyStateExport > 0x7FFFFFFFFFFF) break;
 		}
 		if (gafAsyncKeyStateExport > 0x7FFFFFFFFFFF)
 			return true;
