@@ -43,7 +43,7 @@ bool c_keys::InitKeyboard()
 					break;
 			}
 			if (Winver >= 26100) {
-				gafAsyncKeyStateExport = user_session_state + 0x3820;
+				gafAsyncKeyStateExport = user_session_state + 0x3828;
 			}
 			else if (Winver >= 22631 && Ubr >= 3810) {
 				gafAsyncKeyStateExport = user_session_state + 0x36A8;
