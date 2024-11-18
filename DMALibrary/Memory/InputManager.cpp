@@ -42,15 +42,15 @@ bool c_keys::InitKeyboard()
 				if (user_session_state > 0x7FFFFFFFFFFF)
 					break;
 			}
+
 			if (Winver >= 26100) {
-				gafAsyncKeyStateExport = user_session_state + 0x3828;
-			}
-			else if (Winver >= 22631 && Ubr >= 3810) {
+				gafAsyncKeyStateExport = user_session_state + (Ubr >= 2314 ? 0x3828 : 0x3820);
+			} else if (Winver >= 22631 && Ubr >= 3810) {
 				gafAsyncKeyStateExport = user_session_state + 0x36A8;
-			}
-			else {
+			} else {
 				gafAsyncKeyStateExport = user_session_state + 0x3690;
 			}
+
 			if (gafAsyncKeyStateExport > 0x7FFFFFFFFFFF) break;
 		}
 		if (gafAsyncKeyStateExport > 0x7FFFFFFFFFFF)
