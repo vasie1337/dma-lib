@@ -42,15 +42,15 @@ bool c_keys::InitKeyboard()
 				if (user_session_state > 0x7FFFFFFFFFFF)
 					break;
 			}
+
 			if (Winver >= 26100) {
-				gafAsyncKeyStateExport = user_session_state + 0x3820;
-			}
-			else if (Winver >= 22631 && Ubr >= 3810) {
+				gafAsyncKeyStateExport = user_session_state + (Ubr >= 2314 ? 0x3828 : 0x3820);
+			} else if (Winver >= 22631 && Ubr >= 3810) {
 				gafAsyncKeyStateExport = user_session_state + 0x36A8;
-			}
-			else {
+			} else {
 				gafAsyncKeyStateExport = user_session_state + 0x3690;
 			}
+
 			if (gafAsyncKeyStateExport > 0x7FFFFFFFFFFF) break;
 		}
 		if (gafAsyncKeyStateExport > 0x7FFFFFFFFFFF)
@@ -131,7 +131,7 @@ bool c_keys::IsKeyDown(uint32_t virtual_key_code)
 {
 	if (gafAsyncKeyStateExport < 0x7FFFFFFFFFFF)
 		return false;
-	if (std::chrono::system_clock::now() - start > std::chrono::milliseconds(1))
+	if (std::chrono::system_clock::now() - start > std::chrono::milliseconds(100))
 	{
 		UpdateKeys();
 		start = std::chrono::system_clock::now();
