@@ -27,7 +27,7 @@ bool c_keys::InitKeyboard()
 			auto pid = pids[i];
 			uintptr_t tmp = VMMDLL_ProcessGetModuleBaseU(mem.vHandle, pid, const_cast<LPSTR>("win32ksgd.sys"));
 			uintptr_t g_session_global_slots;
-			if (!tmp) {
+			if (!tmp || (Winver >= 26100 && Ubr >= 2605)) {
 				tmp = VMMDLL_ProcessGetModuleBaseU(mem.vHandle, pid, const_cast<LPSTR>("win32k.sys"));
 				g_session_global_slots = tmp + 0x82538;
 			}
@@ -43,7 +43,9 @@ bool c_keys::InitKeyboard()
 					break;
 			}
 
-			if (Winver >= 26100) {
+			if (Winver >= 26100 && Ubr >= 2605) {
+				gafAsyncKeyStateExport = user_session_state + 0x3830;
+			} else if (Winver >= 26100) {
 				gafAsyncKeyStateExport = user_session_state + (Ubr >= 2314 ? 0x3828 : 0x3820);
 			} else if (Winver >= 22631 && Ubr >= 3810) {
 				gafAsyncKeyStateExport = user_session_state + 0x36A8;
