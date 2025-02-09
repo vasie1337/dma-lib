@@ -30,6 +30,9 @@ bool c_keys::InitKeyboard()
 			if (!tmp || (Winver >= 26100 && Ubr >= 2605)) {
 				tmp = VMMDLL_ProcessGetModuleBaseU(mem.vHandle, pid, const_cast<LPSTR>("win32k.sys"));
 				g_session_global_slots = tmp + 0x82538;
+				if (Ubr >= 3037) {
+					g_session_global_slots = tmp + 0x82530;
+				}
 			}
 			else {
 				g_session_global_slots = tmp + 0x3110;
