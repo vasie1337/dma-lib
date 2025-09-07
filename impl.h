@@ -1,9 +1,8 @@
 #pragma once
-#include "../pch.h"
-#include "InputManager.h"
-#include "Registry.h"
-#include "Shellcode.h"
-#include "../nt/structs.h"
+#include "include.h"
+#include "input_mng.h"
+#include "registry.h"
+#include "structs.h"
 
 class Memory
 {
@@ -48,7 +47,6 @@ private:
 	//shared pointer
 	std::shared_ptr<c_keys> key;
 	c_registry registry;
-	c_shellcode shellcode;
 
 	/*this->registry_ptr = std::make_shared<c_registry>(*this);
 	this->key_ptr = std::make_shared<c_keys>(*this);*/
@@ -72,12 +70,6 @@ public:
 	* @return key class
 	*/
 	c_keys* GetKeyboard() { return key.get(); }
-
-	/**
-	* @brief Gets the shellcode object
-	* @return shellcode class
-	*/
-	c_shellcode GetShellcode() { return shellcode; }
 
 	/**
 	* brief Initializes the DMA

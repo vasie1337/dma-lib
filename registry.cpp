@@ -1,6 +1,6 @@
-#include "pch.h"
-#include "Registry.h"
-#include "Memory.h"
+#include "include.h"
+#include "registry.h"
+#include "impl.h"
 
 std::string c_registry::QueryValue(const char* path, e_registry_type type)
 {

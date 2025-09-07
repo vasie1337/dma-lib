@@ -1,7 +1,7 @@
-#include "pch.h"
-#include "InputManager.h"
-#include "Registry.h"
-#include "Memory/Memory.h"
+#include "include.h"
+#include "input_mng.h"
+#include "registry.h"
+#include "impl.h"
 
 //TODO: Restart winlogon.exe when it doesn't exist.
 bool c_keys::InitKeyboard()
@@ -104,7 +104,7 @@ bool c_keys::InitKeyboard()
 			return false;
 		}
 
-		for (int i = 0; i < eat_map->cMap; i++)
+		for (DWORD i = 0; i < eat_map->cMap; i++)
 		{
 			eat_map_entry = eat_map->pMap + i;
 			if (strcmp(eat_map_entry->uszFunction, "gafAsyncKeyState") == 0)
@@ -140,7 +140,7 @@ bool c_keys::InitKeyboard()
 				LOG("failed to find gafAsyncKeyState\n");
 				return false;
 			}
-			LOG("found gafAsyncKeyState at: 0x%p\n", gafAsyncKeyState);
+			LOG("found gafAsyncKeyState at: 0x%llx\n", gafAsyncKeyState);
 		}
 		if (gafAsyncKeyStateExport > 0x7FFFFFFFFFFF)
 			return true;
